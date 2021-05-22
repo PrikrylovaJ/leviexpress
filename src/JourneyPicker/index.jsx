@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import mapImage from './img/map.svg';
 import './style.css';
 
@@ -17,10 +17,11 @@ import './style.css';
 // }
 
   const CityOptions = ({cities}) => {
+    console.log(cities);
     return (
       <>
         <option value="">Vyberte</option>
-        {cities.map((city) => (<option key={city.code} value={city.code}>{city.name}</option>))}
+        {cities.map((city) => (<option key={city.code} value={city.code}> {city.name}</option>))}
       </>
     );
   };
@@ -30,7 +31,7 @@ const JourneyPicker = () => {
   const[fromCity, setFromCity] = useState('');
   const[toCity, setToCity] = useState('');
   const[date, setDate] = useState('');
-  const[cities, setCities] = useState([{name: 'Praha', code: 'CZ-PRG'}, {name: 'Brno', code: 'CZ-BRQ'}]);
+  const[cities, setCities] = useState([]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -38,6 +39,11 @@ const JourneyPicker = () => {
     console.log(fromCity);
   }
 
+   useEffect(() => {
+    fetch(`https://leviexpress-backend.herokuapp.com/api/cities`)
+      .then((resp) => resp.json())
+      .then((json) => setCities(json.data));
+  }, []);
 
   return (
       <div className="journey-picker container">
